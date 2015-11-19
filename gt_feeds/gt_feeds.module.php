@@ -2,7 +2,7 @@
 /**
  * @file
  * Greatist Feeds module.
- * 
+ *
  * Provides XML feeds.
  */
 
@@ -17,7 +17,6 @@ function gt_feeds_permission() {
   );
   return $items;
 }
-
 
 /**
  * Implements hook_menu().
@@ -34,3 +33,11 @@ function gt_feeds_menu() {
   return $items;
 }
 
+/**
+ * Menu callback for feed/%/%/% menu item.
+ *
+ * Returns a list of node entitites in XML format.
+ */
+function gt_feeds_xml_print($bundle, $vocabulary, $terms) {
+
+}
