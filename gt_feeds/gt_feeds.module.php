@@ -36,21 +36,27 @@ function gt_feeds_menu() {
  * Loads bundle from %gt_feeds_bundle page argument.
  */
 function gt_feeds_bundle_load($bundle_name = '', $map = array(), $index = null) {
-
+  if (empty($bundle_name)) {
+    gt_feeds_exit_error_parameter('entity bundle');
+  }
 }
 
 /**
  * Loads taxonomy vocabulary from %gt_feeds_vocabulary page argument.
  */
 function gt_feeds_vocabulary_load($vocab_name = '', $map = array(), $index = null) {
-
+  if (empty($vocab_name)) {
+    gt_feeds_exit_error_parameter('taxonomy vocabulary');
+  }
 }
 
 /**
  * Loads taxonomy terms from %gt_feeds_term page argument.
  */
 function gt_feeds_term_load($terms = array(), $map = array(), $index = null) {
-
+  if (empty($terms)) {
+    gt_feeds_exit_error_parameter('taxonomy term');
+  }
 }
 
 /**
@@ -60,4 +66,21 @@ function gt_feeds_term_load($terms = array(), $map = array(), $index = null) {
  */
 function gt_feeds_xml_print($bundle, $vocabulary, $terms) {
 
+}
+
+/**
+ * Error callback for feed/%/%/% argument auto-load functions.
+ *
+ * Logs error into Drupal's Watchdog then displays error message in order to
+ * help the user correct the URL request.
+ */
+function gt_feeds_exit_error_parameter($param = '') {
+
+  // Log error message to watchdog.
+  watchdog('gt_feeds', 'Feed missing %parameter parameter.', array('%parameter' => $param), WATCHDOG_ERROR, NULL);
+  drupal_set_message(t('The %parameter parameter is missing from the URL, please provide it in order to render the feed.'), 'error');
+
+  // Interrupt request and provide error message.
+  $destination = NULL;
+  drupal_exit($destination);
 }
