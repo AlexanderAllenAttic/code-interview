@@ -1,0 +1,4 @@
+name = Greatist Feeds
+description = Provides XML feed functionality.
+core = 7.x
+package = Greatist
