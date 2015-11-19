@@ -33,12 +33,23 @@ function gt_feeds_menu() {
   return $items;
 
 /**
- * Loads bundle from %gt_feeds_bundle page argument.
+ * Validates bundle parameter passed via %gt_feeds_bundle page argument.
  */
 function gt_feeds_bundle_load($bundle_name = '', $map = array(), $index = null) {
+
+  // Exit if bundle parameter is not present.
   if (empty($bundle_name)) {
     gt_feeds_exit_error_parameter('entity bundle');
   }
+
+  // Exit if bundle parameter is not valid.
+  $node_types = node_type_get_names();
+  if (!array_key_exists($bundle_name, $node_types)) {
+    gt_feeds_exit_invalid_parameter($bundle_name);
+  }
+
+  // Otherwise, pass now-validated bundle name to the menu callback.
+  return $bundle_name;
 }
 
 /**
@@ -79,6 +90,23 @@ function gt_feeds_exit_error_parameter($param = '') {
   // Log error message to watchdog.
   watchdog('gt_feeds', 'Feed missing %parameter parameter.', array('%parameter' => $param), WATCHDOG_ERROR, NULL);
   drupal_set_message(t('The %parameter parameter is missing from the URL, please provide it in order to render the feed.'), 'error');
+
+  // Interrupt request and provide error message.
+  $destination = NULL;
+  drupal_exit($destination);
+}
+
+/**
+ * Error callback for feed/%/%/% argument auto-load functions.
+ *
+ * Logs error into Drupal's Watchdog then displays error message in order to
+ * help the user correct the URL request.
+ */
+function gt_feeds_exit_invalid_parameter($param_name = '', $param_value = '') {
+
+  // Log error message to watchdog.
+  watchdog('gt_feeds', 'Value @value for parameter @parameter is invalid.', array('@parameter' => $param_name, '@value' => $param_value), WATCHDOG_ERROR, NULL);
+  drupal_set_message(t('The value provided for the %parameter parameter in the URL is invalid.', array('%parameter' => $param_name)), 'error');
 
   // Interrupt request and provide error message.
   $destination = NULL;
