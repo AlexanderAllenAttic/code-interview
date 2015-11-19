@@ -24,10 +24,10 @@ function gt_feeds_permission() {
 function gt_feeds_menu() {
   $items = array();
   # /feed/<content_type>/<taxonomy_vocabulary_name>/<term_names>
-  $items['feed/<content_type>/<taxonomy_vocabulary_name>/<term_names>'] = array(
+  $items['feed/%gt_feeds_bundle/%gt_feeds_vocabulary/%gt_feeds_term'] = array(
     'page callback' => 'gt_feeds_xml_print',
     'access arguments' => array('access greatist feeds'),
-    'page arguments' => array(1, '%gt_feeds_content_type', '%gt_feeds_vocabulary', '%gt_feeds_term'), # %mymodule_abc -> mymodule_abc_load()
+    'page arguments' => array(1, 2, 3), # %mymodule_abc -> mymodule_abc_load()
     'type' => MENU_CALLBACK,
   );
   return $items;
