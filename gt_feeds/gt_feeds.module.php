@@ -33,7 +33,7 @@ function gt_feeds_menu() {
   return $items;
 
 /**
- * Validates bundle parameter passed via %gt_feeds_bundle page argument.
+ * Validates bundle parameter for %gt_feeds_bundle page argument.
  */
 function gt_feeds_bundle_load($bundle_name = '', $map = array(), $index = null) {
 
@@ -45,20 +45,33 @@ function gt_feeds_bundle_load($bundle_name = '', $map = array(), $index = null) 
   // Exit if bundle parameter is not valid.
   $node_types = node_type_get_names();
   if (!array_key_exists($bundle_name, $node_types)) {
-    gt_feeds_exit_invalid_parameter($bundle_name);
+    gt_feeds_exit_invalid_parameter('entity bundle', $bundle_name);
   }
 
-  // Otherwise, pass now-validated bundle name to the menu callback.
+  // Otherwise, pass the now-validated bundle name to the menu callback.
   return $bundle_name;
 }
 
 /**
- * Loads taxonomy vocabulary from %gt_feeds_vocabulary page argument.
+ * Validates taxonomy vocabulary for %gt_feeds_vocabulary page argument.
  */
 function gt_feeds_vocabulary_load($vocab_name = '', $map = array(), $index = null) {
+
+  // Exit if vocabulary parameter is not present.
   if (empty($vocab_name)) {
     gt_feeds_exit_error_parameter('taxonomy vocabulary');
   }
+
+  $vocabs = taxonomy_vocabulary_get_names();
+
+  // Exit if vocabulary does not exist.
+  if (!array_key_exists($vocab_name, $vocabs)) {
+    gt_feeds_exit_invalid_parameter('taxonomy vocabulary', $vocab_name);
+  }
+
+  // Otherwise, pass the now-validated vocabulary to the menu callback as an
+  // object.
+  return $vocabs[$vocab_name];
 }
 
 /**
