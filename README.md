@@ -9,8 +9,8 @@ Guillermo requested you to review this code test/challenge.
 ## Challenge Specs:
 
 Client wants a set of urls to pull an xml feed of content from the site in the form
- 
-  /feed/<content_type>/<taxonomy_vocabulary_name>/<term_names>
+
+    /feed/<content_type>/<taxonomy_vocabulary_name>/<term_names>
  
 Can pull only 1 content type from 1 vocabulary but many terms
  
