@@ -31,6 +31,26 @@ function gt_feeds_menu() {
     'type' => MENU_CALLBACK,
   );
   return $items;
+
+/**
+ * Loads bundle from %gt_feeds_bundle page argument.
+ */
+function gt_feeds_bundle_load($bundle_name = '', $map = array(), $index = null) {
+
+}
+
+/**
+ * Loads taxonomy vocabulary from %gt_feeds_vocabulary page argument.
+ */
+function gt_feeds_vocabulary_load($vocab_name = '', $map = array(), $index = null) {
+
+}
+
+/**
+ * Loads taxonomy terms from %gt_feeds_term page argument.
+ */
+function gt_feeds_term_load($terms = array(), $map = array(), $index = null) {
+
 }
 
 /**
