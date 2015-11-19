@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Greatist Feeds module.
@@ -24,6 +25,12 @@ function gt_feeds_permission() {
 function gt_feeds_menu() {
   $items = array();
   # /feed/<content_type>/<taxonomy_vocabulary_name>/<term_names>
+
+  // Note: The HTTP URLs have character length limitations.
+  // As an alternative, terms could be loaded via a regular GET argument,
+  // with the caviat that the native auto-loader argument functionality would
+  // not be available for the terms. In the meantime, this should suffice as
+  // a "basic" XML feed implementation.
   $items['feed/%gt_feeds_bundle/%gt_feeds_vocabulary/%gt_feeds_term'] = array(
     'page callback' => 'gt_feeds_xml_print',
     'access arguments' => array('access greatist feeds'),
@@ -70,17 +77,34 @@ function gt_feeds_vocabulary_load($vocab_name = '', $map = array(), $index = nul
   }
 
   // Otherwise, pass the now-validated vocabulary to the menu callback as an
-  // object.
+  // object - see taxonomy_vocabulary_get_names() for object format.
   return $vocabs[$vocab_name];
 }
 
 /**
  * Loads taxonomy terms from %gt_feeds_term page argument.
  */
-function gt_feeds_term_load($terms = array(), $map = array(), $index = null) {
+function gt_feeds_term_load($url_terms = '', $map = array(), $index = null) {
+
+  // Exit if terms parameter is empty.
   if (empty($terms)) {
     gt_feeds_exit_error_parameter('taxonomy term');
   }
+  // NOTE: WORK IN PROGRESS
+  // Load terms for menu callback.
+  $term_names = explode("|", $url_terms);
+  $loaded_terms = array();
+  $vocabulary = NULL; // @todo get vocabulary using drupal_static() implementation.
+  foreach($term_names as $term_name) {
+
+    $loaded_term = taxonomy_get_term_by_name($name, $vocabulary);
+    if(!empty($loaded_term)) {
+      $loaded_terms[$term_name] = $loaded_term;
+    }
+  }
+
+
+  // taxonomy_term_load_multiple();
 }
 
 /**
@@ -89,6 +113,13 @@ function gt_feeds_term_load($terms = array(), $map = array(), $index = null) {
  * Returns a list of node entitites in XML format.
  */
 function gt_feeds_xml_print($bundle, $vocabulary, $terms) {
+
+  // @TODO Decide on native PHP XML modules versus Drupal feeds module.
+  // The former is a much faster/easier implementation for the sake of a code exam,
+  // but the latter more extensible out of the box.
+
+  // @TODO Native PHP XML implementation.
+  // @TODO Prefer using EntityFieldQuery and EntityMetadataWrappers whenever we need to load any entity over direct queries.
 
 }
 
