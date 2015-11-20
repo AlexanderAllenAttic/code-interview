@@ -90,21 +90,30 @@ function gt_feeds_term_load($url_terms = '', $map = array(), $index = null) {
   if (empty($terms)) {
     gt_feeds_exit_error_parameter('taxonomy term');
   }
-  // NOTE: WORK IN PROGRESS
+
   // Load terms for menu callback.
   $term_names = explode("|", $url_terms);
-  $loaded_terms = array();
-  $vocabulary = NULL; // @todo get vocabulary using drupal_static() implementation.
-  foreach($term_names as $term_name) {
 
-    $loaded_term = taxonomy_get_term_by_name($name, $vocabulary);
-    if(!empty($loaded_term)) {
-      $loaded_terms[$term_name] = $loaded_term;
+  // @TODO: arg() is OK, should we use menu_get_item() instead? Example:
+  // $item = menu_get_item();
+  // if ($item) ... $item['page_arguments'][2]->machine_name;
+
+  $vocabulary = arg(2);
+  $vocabs = taxonomy_vocabulary_get_names();
+  // Exit if vocabulary does not exist.
+  if (!array_key_exists($vocabulary, $vocabs)) {
+    gt_feeds_exit_invalid_parameter('taxonomy vocabulary', $vocab_name);
+  }
+
+  $term_objects = array();
+  foreach($term_names as $term_name) {
+    $term_object = taxonomy_get_term_by_name($name, $vocabulary);
+    if(!empty($term_object)) {
+      $term_objects[$term_name] = $term_object;
     }
   }
 
-
-  // taxonomy_term_load_multiple();
+  return $term_objects;
 }
 
 /**
@@ -119,7 +128,6 @@ function gt_feeds_xml_print($bundle, $vocabulary, $terms) {
   // but the latter more extensible out of the box.
 
   // @TODO Native PHP XML implementation.
-  // @TODO Prefer using EntityFieldQuery and EntityMetadataWrappers whenever we need to load any entity over direct queries.
 
 }
 
